@@ -7,24 +7,20 @@ char* SEP_RIGHT = "";
 
 
 int main() {
-    //while (1) { 
-        char buf_bat[200] = {0};
-        char buf_back[200] = {0};
-        char buf_net[200] = {0};
-        char buf_audio[200] = {0};
-       
-        get_battery(buf_bat);
-        get_audio(buf_audio);
-        if (get_network(buf_net) == 1) {
-            get_backlight(buf_back, COLOR_BG_NET);
-            printf("%{r}%s %s %s %s %s\n", buf_audio, buf_net,buf_back, buf_bat, get_date());
-        } else {
-            get_backlight(buf_back, COLOR_BG_AUDIO);
-            printf("%{r}%s %s %s %s\n", buf_audio, buf_back, buf_bat, get_date());
-        }
-        
-        //usleep(500);
-    //}
+    char buf_bat[200] = {0};
+    char buf_back[200] = {0};
+    char buf_net[200] = {0};
+    char buf_audio[200] = {0};
+   
+    get_battery(buf_bat);
+    get_audio(buf_audio);
+    if (get_network(buf_net) == 1) {
+        get_backlight(buf_back, COLOR_BG_NET);
+        printf("%{r}%s %s %s %s %s\n", buf_audio, buf_net,buf_back, buf_bat, get_date());
+    } else {
+        get_backlight(buf_back, COLOR_BG_AUDIO);
+        printf("%{r}%s %s %s %s\n", buf_audio, buf_back, buf_bat, get_date());
+    }
     return 0;
 }
 
@@ -132,6 +128,7 @@ int get_battery(char* buf) {
     if (status[0] == 'C') {
         status_icon = "";
     } else {
+        status_icon = "";
         if (percent < 80) {
             status_icon = "";
         } else if (percent < 50) {
