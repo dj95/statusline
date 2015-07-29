@@ -1,0 +1,16 @@
+#define COLOR_BG "#232323"
+
+#define COLOR_FG_DATE "#BDBDBD"
+#define COLOR_BG_DATE "#B51E20"
+
+#define COLOR_FG_BAT "#BDBDBD"
+#define COLOR_BG_BAT "#5E0F10"
+
+#define COLOR_FG_BACK "#BDBDBD"
+#define COLOR_BG_BACK "#333333"
+
+#define COLOR_FG_NET "#848484"
+#define COLOR_BG_NET "#232323"
+
+#define COLOR_FG_AUDIO "#232323"
+#define COLOR_BG_AUDIO "#636363"
