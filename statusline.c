@@ -5,22 +5,22 @@ char* ARROW_RIGHT = "";
 char* SEP_LEFT = "";
 char* SEP_RIGHT = "";
 
+
 int main() {
     //while (1) { 
-        char buf_bat[200];
-        char buf_back[200];
-        char buf_net[200];
-        char buf_audio[200];
+        char buf_bat[200] = {0};
+        char buf_back[200] = {0};
+        char buf_net[200] = {0};
+        char buf_audio[200] = {0};
        
         get_battery(buf_bat);
+        get_audio(buf_audio);
         if (get_network(buf_net) == 1) {
             get_backlight(buf_back, COLOR_BG_NET);
-            get_audio(buf_audio);
-            printf("%{r} %s %s %s %s %s\n", buf_audio, buf_net,buf_back, buf_bat, get_date());
+            printf("%{r}%s %s %s %s %s\n", buf_audio, buf_net,buf_back, buf_bat, get_date());
         } else {
             get_backlight(buf_back, COLOR_BG_AUDIO);
-            get_audio(buf_audio);
-            printf("%{r} %s %s %s %s\n", buf_audio, buf_back, buf_bat, get_date());
+            printf("%{r}%s %s %s %s\n", buf_audio, buf_back, buf_bat, get_date());
         }
         
         //usleep(500);
@@ -29,31 +29,67 @@ int main() {
 }
 
 int get_network(char* buf) {
+    char ip_wifi[16] = {0};
+    char ip_eth[16] = {0};
+    FILE* cmd = {0};
+    char bf[64] = {0};
+    char status[200] = {0};
+    int on = 1;
+
+    cmd = popen("ip -f inet -o addr show wlan0|cut -d\\  -f 7 | cut -d/ -f 1 | sed -re 's/\\n//g'", "r");
+    while (fgets(bf, 16, cmd) != 0) {
+        strncpy(ip_wifi, bf, 16);
+    }
+    pclose(cmd);
+
+    cmd = popen("ip -f inet -o addr show eth0|cut -d\\  -f 7 | cut -d/ -f 1 | sed -re 's/\\n//g'", "r");
+    while (fgets(bf, 16, cmd) != 0) {
+        strncpy(ip_eth, bf, 16);
+    }
+    pclose(cmd);
+   
+    if (ip_eth[0] == 0 && ip_wifi[0] != 0) {
+        sprintf(status, " %s", strtok(ip_wifi, "\n"));
+    } else if (ip_eth[0] != 0 && ip_wifi[0] == 0) {
+        sprintf(status, " %s", strtok(ip_eth, "\n"));
+    } else if (ip_eth[0] != 0 && ip_wifi[0] != 0) {
+        sprintf(status, " %s %s  %s", strtok(ip_wifi, "\n"), ARROW_LEFT, strtok(ip_eth, "\n"));
+    } else if (ip_eth[0] == 0 && ip_wifi[0] == 0) {
+        sprintf(status, "");
+        on = 0;
+    }
+
+    sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s", COLOR_BG_NET, COLOR_BG_AUDIO, SEP_LEFT, COLOR_FG_NET, COLOR_BG_NET, status);
     
-    int percent = 45;
-    char* status_icon = "Wifi placeholder";
-    
-    sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %d%% ", COLOR_BG_NET, COLOR_BG_AUDIO, SEP_LEFT, COLOR_FG_NET, COLOR_BG_NET, status_icon, percent);
-    
-    return 0;
+    return on;
 }
 
 int get_audio(char* buf) {
-    FILE* cmd;
-    char vol[10];
-    char* percent = "65";
-    
-    //cmd = popen("amixer get Master | grep 'Front Left:' | sed -r 's/\s*Front Left: Playback [0-9]* \[//' | sed -r 's/\] \[.*//' | sed -r 's/\s*//g'", "r");
+    FILE* cmd = {0};
+    char vol[10] = {0};
+    char percent[3] = "65";
+    char stat[3] = {0};
+    char* status_icon;
 
-    //while (fgets(vol, 10, cmd) != 0) {
-    //    printf("%s", vol);    
-    //}
-   
-    //pclose(cmd);
-
-    char* status_icon = "Volume placeholder";
+    cmd = popen("amixer get Master | grep 'Front Left:' | sed -r 's/\\s*Front Left: Playback [0-9]* \\[//' | sed -r 's/\\] \\[.*//' | sed -r 's/\\s*//g'", "r");
+    while (fgets(vol, 10, cmd) != 0) {
+        strncpy(percent, vol, 3);
+    }
+    pclose(cmd);
     
-    sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s%% ", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent);
+    cmd = popen("amixer get Master | grep 'Front Left:' | sed -r 's/\\s*Front Left: Playback [0-9]* \\[[0-9]*%\\] \\[//' | sed -r 's/\\]\\s*//'", "r");
+    while (fgets(vol, 10, cmd) != 0) {
+        strncpy(stat, vol, 3);
+    }
+    pclose(cmd);
+
+    if (stat[1] == 'n') {
+        status_icon = "";
+    } else {
+        status_icon = "";
+    }
+    
+    sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s% ", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent);
     
     return 1;
 }
@@ -93,11 +129,8 @@ int get_battery(char* buf) {
         status[i] = val[i];
     }
     status[3] = '\0';
-    printf(status);
-    ptr = "Cha";
     if (status[0] == 'C') {
         status_icon = "";
-        printf("test");
     } else {
         if (percent < 80) {
             status_icon = "";

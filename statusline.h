@@ -4,6 +4,17 @@
 #include <string.h>
 #include <unistd.h>
 #include <iwlib.h>
+#include <fcntl.h>
+
+#ifdef OSSCONTROL
+#define MIXER_DEV "/dev/dsp"
+
+#include <sys/soundcard.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#else
+#include <alsa/asoundlib.h>
+#endif
 
 #include "config.h"
 
