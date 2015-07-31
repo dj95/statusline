@@ -109,8 +109,8 @@ int get_audio(char* buf) {
 
 
 int get_network(char* buf) {
-    char ip_wifi[16] = {0};
-    char ip_eth[16] = {0};
+    char ip_wifi[32] = {0};
+    char ip_eth[32] = {0};
     FILE* cmd = {0};
     char bf[64] = {0};
     char status[200] = {0};
@@ -119,14 +119,14 @@ int get_network(char* buf) {
 
 
     cmd = popen("ip -f inet -o addr show wlan0|cut -d\\  -f 7 | cut -d/ -f 1 | sed -re 's/\\n//g'", "r");
-    while (fgets(bf, 16, cmd) != 0) {
-        strncpy(ip_wifi, bf, 16);
+    while (fgets(bf, 30, cmd) != 0) {
+        strncpy(ip_wifi, bf, 30);
     }
     pclose(cmd);
 
     cmd = popen("ip -f inet -o addr show eth0|cut -d\\  -f 7 | cut -d/ -f 1 | sed -re 's/\\n//g'", "r");
-    while (fgets(bf, 16, cmd) != 0) {
-        strncpy(ip_eth, bf, 16);
+    while (fgets(bf, 30, cmd) != 0) {
+        strncpy(ip_eth, bf, 30);
     }
     pclose(cmd);
    
