@@ -48,16 +48,15 @@ int get_workspace(char* buf) {
     pclose(cmd);
     
     cmd = popen("whoami", "r");
-    while (fgets(ptr, 32, cmd) != 0) {
+    if (fgets(ptr, 32, cmd) != 0) {
         strncpy(username, strtok(ptr, "\n"), 32);
-        count = count + 1;
     }
     pclose(cmd);
     
     read_value("/etc/hostname", hostname);
     
     cmd = popen("xtitle", "r");
-    while (fgets(ptr, 60, cmd) != 0) {
+    if (fgets(ptr, 60, cmd) != 0) {
         strncpy(title, ptr, 60);
     }
     pclose(cmd);
@@ -67,11 +66,11 @@ int get_workspace(char* buf) {
             strncpy(active_ws, workspaces[i-1], 5);
         }
     }
-
+   
     if (strtok(title, "\n") == 0) {  
         sprintf(buf, "%%{F%s}%%{B%s} %s@%s %%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %%{F%s}%%{B%s}%s%%{F%s}%%{B%s}", COLOR_FG_HOST, COLOR_BG_HOST, username, hostname, COLOR_BG_HOST, COLOR_BG_WS, SEP_RIGHT, COLOR_FG_WS, COLOR_BG_WS, active_ws, COLOR_BG_WS, COLOR_BG, SEP_RIGHT, COLOR_BG, COLOR_BG);
     } else {    
-        sprintf(buf, "%%{F%s}%%{B%s} %s@%s %%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %%{F%s}%%{B%s}%s", COLOR_FG_HOST, COLOR_BG_HOST, username, hostname, COLOR_BG_HOST, COLOR_BG_WS, SEP_RIGHT, COLOR_FG_WS, COLOR_BG_WS, active_ws, COLOR_BG_WS, COLOR_BG_TITLE, SEP_RIGHT, COLOR_FG_TITLE, COLOR_BG_TITLE, strtok(title, "\n"), COLOR_BG_TITLE, COLOR_BG, SEP_RIGHT);
+        sprintf(buf, "%%{F%s}%%{B%s} %s@%s %%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %%{F%s}%%{B%s}%s", COLOR_FG_HOST, COLOR_BG_HOST, username, hostname, COLOR_BG_HOST, COLOR_BG_WS, SEP_RIGHT, COLOR_FG_WS, COLOR_BG_WS, active_ws, COLOR_BG_WS, COLOR_BG_TITLE, SEP_RIGHT, COLOR_FG_TITLE, COLOR_BG_TITLE, title, COLOR_BG_TITLE, COLOR_BG, SEP_RIGHT);
     }
     return 1;
 }
