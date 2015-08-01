@@ -78,10 +78,11 @@ int get_workspace(char* buf) {
 
 int get_audio(char* buf) {
     FILE* cmd = {0};
-    char vol[10] = {0};
+    char vol[64] = {0};
     char percent[3] = "65";
     char stat[3] = {0};
     char* status_icon;
+    char info[64] = {0};
 
     cmd = popen("amixer get Master | grep 'Front Left:' | sed -r 's/\\s*Front Left: Playback [0-9]* \\[//' | sed -r 's/\\] \\[.*//' | sed -r 's/\\s*//g'", "r");
     while (fgets(vol, 10, cmd) != 0) {
@@ -94,15 +95,27 @@ int get_audio(char* buf) {
         strncpy(stat, vol, 3);
     }
     pclose(cmd);
+    
+    cmd = popen("mpc status | perl -ne 'if (/\\[playing\\]/) {CORE::say (\"(\", `mpc current|tr -d \"\\n\"`, \")\")}'", "r");
+    while (fgets(vol, 40, cmd) != 0) {
+        strncpy(info, vol, 40);
+    }
+    pclose(cmd);
+    
 
     if (stat[1] == 'n') {
         status_icon = "";
     } else {
         status_icon = "";
     }
-    
-    sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s% ", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent);
-    
+  
+
+    if ((info[0] == 'm' && info[1] == 'p' && info[2] == 'd') || (info[0] == 0)) {
+        sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s% ", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent);
+    } else {
+        sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s%% %s", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent, strtok(info, "\n"));
+    } 
+
     return 1;
 }
 
@@ -198,7 +211,7 @@ int get_battery(char* buf) {
             status_icon = "";
         } else if (percent < 50) {
             status_icon = "";
-        } else if (percent < 15) {
+        } else if (percent < 30) {
             status_icon = "";
         }
     }
