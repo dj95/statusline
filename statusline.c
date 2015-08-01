@@ -1,3 +1,9 @@
+/*
+ * statusline for lemonbar
+ *
+ * © 2015 Daniel Jankowski
+ * Licensed under the MIT/X Consortium License
+ **/
 #include "statusline.h"
 
 char* ARROW_LEFT = "";
@@ -113,7 +119,7 @@ int get_audio(char* buf) {
     if ((info[0] == 'm' && info[1] == 'p' && info[2] == 'd') || (info[0] == 0)) {
         sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s% ", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent);
     } else {
-        sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s%% %s", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent, strtok(info, "\n"));
+        sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s %s", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent, strtok(info, "\n"));
     } 
 
     return 1;
