@@ -27,4 +27,4 @@ License
 
 © 2015 Daniel Jankowski
 Licensed under the MIT/X Consortium License.
-See (LICENSE)[./LICENSE] for details.
+See [LICENSE](./LICENSE) for details.
