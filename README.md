@@ -6,7 +6,7 @@ statusline for lemonbar written in C.
 Screenshot
 ----------
 
-[logo](./screenshot.png)
+![logo](./screenshot.png)
 
 
 Requierments
