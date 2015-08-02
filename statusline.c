@@ -102,7 +102,8 @@ int get_audio(char* buf) {
     }
     pclose(cmd);
     
-    cmd = popen("mpc status | perl -ne 'if (/\\[playing\\]/) {CORE::say (\"(\", `mpc current|tr -d \"\\n\"`, \")\")}'", "r");
+    //cmd = popen("mpc status | perl -ne 'if (/\\[playing\\]/) {CORE::say (\"(\", `mpc current|tr -d \"\\n\"`, \")\")}'", "r");
+    cmd = popen("mpc current", "r");
     while (fgets(vol, 40, cmd) != 0) {
         strncpy(info, vol, 40);
     }
@@ -119,7 +120,7 @@ int get_audio(char* buf) {
     if ((info[0] == 'm' && info[1] == 'p' && info[2] == 'd') || (info[0] == 0)) {
         sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s% ", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent);
     } else {
-        sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s %s", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent, strtok(info, "\n"));
+        sprintf(buf, "%%{F%s}%%{B%s}%s%%{F%s}%%{B%s} %s %s (%s)", COLOR_BG_AUDIO, COLOR_BG, SEP_LEFT, COLOR_FG_AUDIO, COLOR_BG_AUDIO, status_icon, percent, strtok(info, "\n"));
     } 
 
     return 1;
