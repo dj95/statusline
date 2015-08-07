@@ -17,7 +17,8 @@ Requierments
 - amixer
 - acpi
 - i3-msg
-
+- jshon
+- xtitle
 
 Installation
 ------------
