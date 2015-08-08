@@ -18,6 +18,8 @@ Requierments
 - acpi
 - i3-msg
 - grep
+- jshon
+- xtitle
 - sed
 - mpc (_If you want to see mod data_)
 
