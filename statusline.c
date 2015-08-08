@@ -13,25 +13,41 @@ char* SEP_RIGHT = "";
 
 
 int main() {
+    savepoint("==========================");
+
     char buf_bat[200] = {0};
     char buf_back[200] = {0};
     char buf_net[200] = {0};
     char buf_audio[200] = {0};
     char buf_date[200] = {0};
     char buf_ws[300] = {0};
+    savepoint("allocation");
 
     get_workspace(buf_ws);
+    savepoint("workspace");
 
     get_battery(buf_bat);
+    savepoint("battery");
+
     get_audio(buf_audio);
+    savepoint("audio");
+
     get_date(buf_date);
+    savepoint("date");
+
     if (get_network(buf_net) == 1) {
         get_backlight(buf_back, COLOR_BG_NET);
+        savepoint("backlight");
+
         printf("%%{l}%s %%{r}%s %s %s %s %s%%{F%s}%%{B%s}\n", buf_ws, buf_audio, buf_net, buf_back, buf_bat, buf_date, COLOR_BG, COLOR_BG);
     } else {
         get_backlight(buf_back, COLOR_BG_AUDIO);
+        savepoint("backlight");
+
         printf("%%{F%s}%%{B%s}%%{l}%s%%{F%s}%%{B%s} %%{r}%s %s %s %s%%{F%s}%%{B%s}\n",COLOR_BG, COLOR_BG,  buf_ws, COLOR_BG, COLOR_BG, buf_audio, buf_back, buf_bat, buf_date, COLOR_BG, COLOR_BG);
     }
+    savepoint("print");
+    savepoint("==========================");
     return 0;
 }
 
@@ -313,3 +329,20 @@ int file_exists(char *file) {
     fclose(fp);
     return 1;
 }
+
+
+uint64_t get_time_stamp() {
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    return tv.tv_sec*(uint64_t)1000000+tv.tv_usec;
+}
+
+
+void savepoint(const char* text) {
+#if PROFILE > 0
+    uint64_t tmp = get_time_stamp() - lastSave;
+    fprintf(stderr, "[%15s] %ulll ns\n", text, tmp);
+    lastSave = get_time_stamp();
+#endif
+}
+

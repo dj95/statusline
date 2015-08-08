@@ -30,3 +30,4 @@
 #define BACKLIGHT_TYPE "intel"
 
 #define DEBUG 0
+#define PROFILE 0
