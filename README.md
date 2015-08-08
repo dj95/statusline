@@ -17,7 +17,9 @@ Requierments
 - amixer
 - acpi
 - i3-msg
-
+- grep
+- sed
+- mpc (_If you want to see mod data_)
 
 Installation
 ------------
@@ -25,7 +27,7 @@ Installation
 - Make shure you have all dependencies
 - Edit the `config.h` to your beliefs
 - Run `make`
-- Write a short BASH-script, that runs the binary several times a second and pipe the output into lemonbar
+- Write a short BASH-script, that runs the binary several times a second and pipe the output into lemonbar (example included)
 
 
 License

@@ -23,3 +23,10 @@
 
 #define COLOR_FG_TITLE "#BDBDBD"
 #define COLOR_BG_TITLE "#333333"
+
+#define DEVICE_WLAN "wlp3s0"
+#define DEVICE_LAN ""
+
+#define BACKLIGHT_TYPE "intel"
+
+#define DEBUG 0
