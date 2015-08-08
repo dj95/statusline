@@ -103,7 +103,12 @@ int get_audio(char* buf) {
     pclose(cmd);
 
     //cmd = popen("mpc status | perl -ne 'if (/\\[playing\\]/) {CORE::say (\"(\", `mpc current|tr -d \"\\n\"`, \")\")}'", "r");
-    cmd = popen("mpc current 2>/dev/null", "r");
+    if(DEBUG) {
+        cmd = popen("mpc current", "r");
+    } else {
+        cmd = popen("mpc current 2>/dev/null", "r");
+    }
+
     while (fgets(vol, 40, cmd) != 0) {
         strncpy(info, vol, 40);
     }
