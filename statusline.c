@@ -141,9 +141,10 @@ int get_network(char* buf) {
     char essid[100] = {0};
     int on = 1;
 
-    if(!strcmp(DEVICE_WLAN, "")) {
+    if(DEVICE_WLAN != "") {
         char cmd_wlan[75 + 10];
         sprintf(cmd_wlan, "ip -f inet -o addr show %s|cut -d\\  -f 7 | cut -d/ -f 1 | sed -re 's/\\n//g'", DEVICE_WLAN);
+        printf("test");
         cmd = popen(cmd_wlan, "r");
         while (fgets(bf, 30, cmd) != 0) {
             strncpy(ip_wifi, bf, 30);
@@ -151,7 +152,7 @@ int get_network(char* buf) {
         pclose(cmd);
     }
 
-    if(!strcmp(DEVICE_LAN, "")) {
+    if(DEVICE_LAN != "") {
         char cmd_lan[75 + 10];
         sprintf(cmd_lan, "ip -f inet -o addr show %s|cut -d\\  -f 7 | cut -d/ -f 1 | sed -re 's/\\n//g'", DEVICE_LAN);
         cmd = popen(cmd_lan, "r");
