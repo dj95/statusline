@@ -18,6 +18,8 @@
 
 #include "config.h"
 
+uint64_t lastSave = 0;
+
 int main();
 int get_workspace(char*);
 int get_audio(char*);
@@ -27,3 +29,5 @@ int get_battery(char*);
 int get_date(char*);
 int read_value(char*, char*);
 int file_exists(char*);
+uint64_t get_time_stamp();
+void savepoint(const char*);
